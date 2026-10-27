@@ -1,7 +1,7 @@
 package org.gvs.axis.util;
 
+import lombok.RequiredArgsConstructor;
 import org.gvs.axis.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
  * @author vitor
  */
 @Component
+@RequiredArgsConstructor
 public class CPFValidator {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public void validar(String cpf) {
 

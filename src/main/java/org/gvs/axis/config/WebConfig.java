@@ -1,7 +1,7 @@
 package org.gvs.axis.config;
 
+import lombok.RequiredArgsConstructor;
 import org.gvs.axis.config.SecurityConfig.AuthenticationInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
@@ -17,10 +17,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author vitor
  */
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private AuthenticationInterceptor authenticationInterceptor;
+    private final AuthenticationInterceptor authenticationInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

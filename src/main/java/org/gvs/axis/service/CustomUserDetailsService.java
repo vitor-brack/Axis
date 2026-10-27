@@ -1,10 +1,10 @@
 package org.gvs.axis.service;
 
 import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import org.gvs.axis.model.Usuario;
 import org.gvs.axis.repository.UsuarioRepository;
 import org.gvs.axis.security.CustomUserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
  * @author vitor
  */
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.gvs.axis.dto.AtualizarReservaDTO;
 import org.gvs.axis.dto.request.ReservaRequest;
@@ -20,7 +21,6 @@ import org.gvs.axis.model.Usuario;
 import org.gvs.axis.repository.AmbienteRepository;
 import org.gvs.axis.repository.ReservaRepository;
 import org.gvs.axis.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,16 +33,14 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ReservaService {
 
-    @Autowired
-    private ReservaRepository reservaRepository;
+    private final ReservaRepository reservaRepository;
 
-    @Autowired
-    private AmbienteRepository ambienteRepository;
+    private final AmbienteRepository ambienteRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public boolean verificarDisponibilidade(Long ambienteId, LocalDateTime data,
             LocalTime horaInicio, LocalTime horaFim, Long reservaAtualId) {

@@ -3,9 +3,8 @@ package org.gvs.axis.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.gvs.axis.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,11 +12,10 @@ import org.springframework.stereotype.Component;
  * @author vitor
  */
 @Component
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class EmailValidator {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     private static final String EMAIL_PATTERN
             = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
