@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.gvs.axis.dto.AtualizarReservaDTO;
 import org.gvs.axis.dto.request.ReservaRequest;
 import org.gvs.axis.dto.response.ReservaResponse;
@@ -30,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
  *
  * @author vitor
  */
+@Slf4j
 @Service
 public class ReservaService {
 
@@ -339,15 +341,14 @@ public class ReservaService {
         return response;
     }
 
+    // Sem @Transactional aqui: o UPDATE já roda na transação do repositório, e uma
+    // transação em volta seria marcada para rollback pela falha, derrubando o commit mesmo com o catch
     @Scheduled(fixedRate = 1800000) // 30 minutos em milissegundos
-    @Transactional
     public void verificarReservasExpiradas() {
         try {
             reservaRepository.atualizarStatusReservasExpiradas(LocalDateTime.now());
         } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.FAILED_DEPENDENCY,
-                    "Erro ao verificar reservas expiradas");
+            log.error("Erro ao verificar reservas expiradas", e);
         }
     }
 }
