@@ -1,6 +1,7 @@
 package org.gvs.axis.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -100,12 +101,7 @@ public class ReservaService {
         }
 
         // Calcular valor total
-        double horasReservadas = ChronoUnit.MINUTES.between(
-                request.getHoraInicio(),
-                request.getHoraFim()
-        ) / 60.0;
-
-        BigDecimal valorTotal = BigDecimal.valueOf(ambiente.getValorHora().doubleValue() * horasReservadas);
+        BigDecimal valorTotal = calcularValor(ambiente.getValorHora(), request.getHoraInicio(), request.getHoraFim());
 
         // Criar reserva
         Reserva reserva = new Reserva();
@@ -159,18 +155,12 @@ public class ReservaService {
         }
 
         // Calcular novo valor
-        double horasReservadas = ChronoUnit.MINUTES.between(
-                dto.getHoraInicio(),
-                dto.getHoraFim()
-        ) / 60.0;
-
-        BigDecimal novoValor = BigDecimal.valueOf(
-                reserva.getAmbiente().getValorHora().doubleValue() * horasReservadas
-        );
+        LocalDateTime fim = dto.getData().atTime(dto.getHoraFim());
+        BigDecimal novoValor = calcularValor(reserva.getAmbiente().getValorHora(), dataHora, fim);
 
         // Atualizar a reserva
         reserva.setHoraInicio(dataHora);
-        reserva.setHoraFim(dto.getData().atTime(dto.getHoraFim()).plusMinutes(30));
+        reserva.setHoraFim(fim.plusMinutes(30));
         reserva.setValorTotal(novoValor);
         reserva.setDataAtualizacao(LocalDateTime.now());
 
@@ -326,6 +316,13 @@ public class ReservaService {
                 -> horario.isAfter(reserva.getHoraInicio().toLocalTime())
                 && horario.isBefore(reserva.getHoraFim().toLocalTime())
         );
+    }
+
+    // Minutos reservados × valor por hora ÷ 60, arredondado para centavos
+    private BigDecimal calcularValor(BigDecimal valorHora, LocalDateTime inicio, LocalDateTime fim) {
+        long minutos = ChronoUnit.MINUTES.between(inicio, fim);
+        return valorHora.multiply(BigDecimal.valueOf(minutos))
+                .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
     }
 
     private ReservaResponse converterParaResponse(Reserva reserva) {
