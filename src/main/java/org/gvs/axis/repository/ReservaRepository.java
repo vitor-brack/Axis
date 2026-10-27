@@ -20,9 +20,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByUsuarioAndStatusInOrderByDataCriacaoDesc(Usuario usuario, List<StatusReserva> status);
 
-    List<Reserva> findByUsuarioNomeOrderByDataCriacaoDescHoraInicioDesc(String nome);
-
-    Optional<Reserva> findByIdAndUsuarioNome(Long id, String nome);
+    List<Reserva> findByUsuarioEmailOrderByDataCriacaoDescHoraInicioDesc(String email);
 
     List<Reserva> findByAmbienteIdAndDataCriacao(Long ambiente, LocalDateTime dataCriacao);
 

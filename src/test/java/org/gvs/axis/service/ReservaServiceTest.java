@@ -99,6 +99,37 @@ class ReservaServiceTest {
         assertEquals(StatusReserva.CANCELADA, cancelada.getStatus());
     }
 
+    // Bug: as buscas filtravam por usuario.nome, mas recebem o e-mail do login (CustomUserDetails.getUsername)
+    @Test
+    void buscarReservasDoUsuarioUsaOEmailDoLogin() {
+        Reserva daAna = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CONFIRMADA);
+        reservaExistente(bruno, LocalTime.of(13, 0), LocalTime.of(14, 0), StatusReserva.CONFIRMADA);
+
+        List<ReservaResponse> reservas = reservaService.buscarReservasDoUsuario("ana@exemplo.com");
+
+        assertEquals(List.of(daAna.getId()), reservas.stream().map(ReservaResponse::getId).toList());
+    }
+
+    @Test
+    void buscarReservaUsaOEmailDoLogin() {
+        Reserva daAna = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CONFIRMADA);
+
+        ReservaResponse encontrada = assertDoesNotThrow(
+                () -> reservaService.buscarReserva(daAna.getId(), "ana@exemplo.com"));
+
+        assertEquals(daAna.getId(), encontrada.getId());
+    }
+
+    @Test
+    void buscarReservaDeOutroUsuarioNaoEncontra() {
+        Reserva daAna = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CONFIRMADA);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> reservaService.buscarReserva(daAna.getId(), "bruno@exemplo.com"));
+
+        assertEquals(HttpStatus.NOT_FOUND, erro.getStatusCode());
+    }
+
     // criarReserva grava o fim com 30 minutos a mais; as reservas de teste seguem a mesma regra
     private Reserva reservaExistente(Usuario usuario, LocalTime inicio, LocalTime fim, StatusReserva status) {
         return em.persist(Reserva.builder()

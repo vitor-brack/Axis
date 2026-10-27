@@ -220,16 +220,16 @@ public class ReservaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReservaResponse> buscarReservasDoUsuario(String username) {
-        List<Reserva> reservas = reservaRepository.findByUsuarioNomeOrderByDataCriacaoDescHoraInicioDesc(username);
+    public List<ReservaResponse> buscarReservasDoUsuario(String email) {
+        List<Reserva> reservas = reservaRepository.findByUsuarioEmailOrderByDataCriacaoDescHoraInicioDesc(email);
         return reservas.stream()
                 .map(this::converterParaResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ReservaResponse buscarReserva(Long id, String username) {
-        Reserva reserva = reservaRepository.findByIdAndUsuarioNome(id, username)
+    public ReservaResponse buscarReserva(Long id, String email) {
+        Reserva reserva = reservaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "Reserva não encontrada"
