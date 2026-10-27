@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.gvs.axis.dto.AtualizarReservaDTO;
 import org.gvs.axis.dto.request.ReservaRequest;
 import org.gvs.axis.dto.response.ReservaResponse;
 import org.gvs.axis.enums.StatusReserva;
@@ -76,6 +77,24 @@ class ReservaServiceTest {
         ReservaResponse criada = reservaService.criarReserva(pedido(LocalTime.of(10, 0), LocalTime.of(11, 0)), "ana@exemplo.com");
 
         assertEquals(StatusReserva.CONFIRMADA, criada.getStatus());
+    }
+
+    // Bug: a conta do valor passava por double e não arredondava os centavos
+    @Test
+    void criarReservaCobraOsMinutosEmCentavos() {
+        ReservaResponse criada = reservaService.criarReserva(pedido(LocalTime.of(10, 0), LocalTime.of(10, 50)), "ana@exemplo.com");
+
+        assertEquals(new BigDecimal("41.67"), criada.getValorTotal());
+    }
+
+    @Test
+    void alterarReservaRecalculaOValorEmCentavos() {
+        Reserva reserva = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CONFIRMADA);
+
+        ReservaResponse alterada = reservaService.alterarReserva(
+                reserva.getId(), alteracao(LocalTime.of(14, 0), LocalTime.of(15, 10)), "ana@exemplo.com");
+
+        assertEquals(new BigDecimal("58.33"), alterada.getValorTotal());
     }
 
     // Bug: a verificação era "CANCELADA".equals(status), String contra enum, que nunca é verdadeira
@@ -148,6 +167,14 @@ class ReservaServiceTest {
         pedido.setHoraInicio(DIA.atTime(inicio));
         pedido.setHoraFim(DIA.atTime(fim));
         return pedido;
+    }
+
+    private AtualizarReservaDTO alteracao(LocalTime inicio, LocalTime fim) {
+        AtualizarReservaDTO alteracao = new AtualizarReservaDTO();
+        alteracao.setData(DIA);
+        alteracao.setHoraInicio(inicio);
+        alteracao.setHoraFim(fim);
+        return alteracao;
     }
 
     private long contarReservas() {
