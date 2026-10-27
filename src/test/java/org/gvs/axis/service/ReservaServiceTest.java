@@ -78,6 +78,27 @@ class ReservaServiceTest {
         assertEquals(StatusReserva.CONFIRMADA, criada.getStatus());
     }
 
+    // Bug: a verificação era "CANCELADA".equals(status), String contra enum, que nunca é verdadeira
+    @Test
+    void cancelarReservaJaCanceladaFalha() {
+        Reserva reserva = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CANCELADA);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> reservaService.cancelarReserva(reserva.getId(), "ana@exemplo.com"));
+
+        assertEquals(HttpStatus.BAD_REQUEST, erro.getStatusCode());
+        assertTrue(erro.getReason().contains("já está cancelada"));
+    }
+
+    @Test
+    void cancelarReservaConfirmadaMudaStatus() {
+        Reserva reserva = reservaExistente(ana, LocalTime.of(10, 0), LocalTime.of(11, 0), StatusReserva.CONFIRMADA);
+
+        ReservaResponse cancelada = reservaService.cancelarReserva(reserva.getId(), "ana@exemplo.com");
+
+        assertEquals(StatusReserva.CANCELADA, cancelada.getStatus());
+    }
+
     // criarReserva grava o fim com 30 minutos a mais; as reservas de teste seguem a mesma regra
     private Reserva reservaExistente(Usuario usuario, LocalTime inicio, LocalTime fim, StatusReserva status) {
         return em.persist(Reserva.builder()

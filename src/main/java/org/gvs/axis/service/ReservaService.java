@@ -250,7 +250,7 @@ public class ReservaService {
             );
         }
 
-        if ("CANCELADA".equals(reserva.getStatus())) {
+        if (reserva.getStatus() == StatusReserva.CANCELADA) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Reserva já está cancelada"
             );
