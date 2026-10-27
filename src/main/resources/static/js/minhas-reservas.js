@@ -3,9 +3,9 @@ function cancelarReserva(id) {
         fetch(`/usuario/minhas-reservas/${id}/cancelar`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...cabecalhoCsrf()
             },
-            // Adicionar CSRF token se necessário
             credentials: 'include'
         })
                 .then(async response => {
@@ -40,7 +40,8 @@ function salvarAlteracoes() {
     fetch(`/usuario/minhas-reservas/${id}/alterar`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...cabecalhoCsrf()
         },
         body: JSON.stringify({
             data: novaData,

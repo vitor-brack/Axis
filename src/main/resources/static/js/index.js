@@ -177,7 +177,8 @@ function reservarAmbiente(ambienteId) {
                 return fetch('/reserva/criar', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        ...cabecalhoCsrf()
                     },
                     body: JSON.stringify(reservaData)
                 });
