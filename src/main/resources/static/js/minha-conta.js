@@ -16,6 +16,7 @@ async function atualizarPerfil() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...cabecalhoCsrf()
             },
             body: JSON.stringify(dados)
         });
