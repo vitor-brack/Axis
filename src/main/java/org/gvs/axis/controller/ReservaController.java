@@ -4,10 +4,10 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.gvs.axis.dto.request.ReservaRequest;
 import org.gvs.axis.dto.response.ReservaResponse;
 import org.gvs.axis.service.ReservaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,10 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/reserva")
+@RequiredArgsConstructor
 public class ReservaController {
 
-    @Autowired
-    private ReservaService reservaService;
+    private final ReservaService reservaService;
 
     @PostMapping("/criar")
     public ResponseEntity<ReservaResponse> criarReserva(

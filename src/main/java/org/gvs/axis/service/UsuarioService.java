@@ -12,7 +12,6 @@ import org.gvs.axis.util.EmailValidator;
 import org.gvs.axis.util.NomeValidator;
 import org.gvs.axis.util.PasswordEncryption;
 import org.gvs.axis.util.TelefoneValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private CPFValidator cpfValidator;
+    private final CPFValidator cpfValidator;
 
-    @Autowired
-    private EmailValidator emailValidator;
+    private final EmailValidator emailValidator;
 
     private UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();

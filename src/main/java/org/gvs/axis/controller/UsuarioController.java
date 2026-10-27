@@ -11,7 +11,6 @@ import org.gvs.axis.dto.UsuarioDTO;
 import org.gvs.axis.dto.response.ReservaResponse;
 import org.gvs.axis.service.ReservaService;
 import org.gvs.axis.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,11 +35,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
     private final UsuarioService usuarioService;
 
-    @Autowired
-    private ReservaService reservaService;
+    private final ReservaService reservaService;
 
     @GetMapping("/cadastro")
     public String exibirFormularioCadastro(Model model) {
