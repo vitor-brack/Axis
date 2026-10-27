@@ -87,6 +87,18 @@ public class ReservaService {
                 HttpStatus.NOT_FOUND, "Ambiente não encontrado"
         ));
 
+        // Verificar conflito com outras reservas do ambiente
+        if (!reservaRepository.findReservasSobrepostas(
+                ambiente.getId(),
+                request.getHoraInicio(),
+                request.getHoraFim(),
+                0L).isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Já existe uma reserva para este ambiente no período selecionado"
+            );
+        }
+
         // Calcular valor total
         double horasReservadas = ChronoUnit.MINUTES.between(
                 request.getHoraInicio(),
