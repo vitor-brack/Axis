@@ -36,7 +36,7 @@ public class SecurityConfig {
                 // Rotas públicas
                 .requestMatchers("/", "/home", "/usuario/cadastro", 
                         "/usuario/login", "ambiente/buscar", 
-                        "usuario/status", "/reserva/criar", 
+                        "usuario/status",
                         "/css/**", "/js/**", "/img/**").permitAll()
                 .anyRequest().authenticated()
                 )
